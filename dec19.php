@@ -1,23 +1,30 @@
 <?php
-var_dump($xy_tab);
 //0.1 Declaration de variables 
 $height = 0;
 $txt = '';
 $num = 0;
 $sum = 0;
 $bp = 0;
+$Image_name = array();
+$xy_tab = array();
 // 1.1 Ouverture du dossier 
 if ($dh = opendir($argv[1])) {
+//    echo "Processing \"$argv[1]\" \n";
     while (($file = readdir($dh)) !== false) {
         $mime_type[] = array(mime_content_type($file), $file);
     }
+    print_r($mime_type);
 }
+
 // 1.2 Filtre des fichiers
+
 foreach ($mime_type as $content) {
     if (preg_match('/png$/', $content[0]) == 1) {
         $Image_name[] = $content[1];
     } 
 }
+    echo "Image_name\n";
+    print_r($Image_name);
 // 1.3 Creation et ?copie? des images
 foreach ($Image_name as $content) {
     $xy_tab[] = getimagesize($content);
@@ -30,6 +37,7 @@ $z = array_merge($j,$x);
 //var_dump($z);
 //Sum of the values for obtain the higgest width
 $width = array_sum($x);
+
 //Comparing value for obtain the higgest height
 foreach ($y as $value) {
     if ($value > $height)
@@ -37,7 +45,7 @@ foreach ($y as $value) {
 }
 // 2.1 Creation d'un alpha, d' une image "d' accueil" pour notre sprite
 
-
+echo "$width $height";
 $dest = imagecreatetruecolor($width, $height);
 $background = imagecolorallocatealpha($dest, 255, 255, 255, 127);
 imagefill($dest, 0, 0, $background);
@@ -45,7 +53,6 @@ imagealphablending($dest, false);
 imagesavealpha($dest, true);
 // $img1 = imagecreatefrompng($content);
 $handle = fopen('../paf.png', "w+");
-var_dump($Image_name);
 for ($i = 0; $i < count($Image_name); $i++) {
     $sum = $sum + $z[$i];
     $img = imagecreatefrompng($Image_name[$i]);
@@ -64,9 +71,15 @@ foreach ($Image_name as $image) {
         wdith : $size[0]px;
         heigth : $size[1]px;
         background-position:" . $bp . "px 0px;\n");
-    $bp += $size[0];
+        $bp += $size[0];
 }
-   
+/*
+$test = fopen("bo","c+");
+fwrite($test,
+    "a = $b_x;
+b = $b_y;\n"); 
+
+
 /*
 for ($j = 0; $j < count($x); $j++) {
     $txt = $txt . "." . $Image_name[$j] . "\n";
